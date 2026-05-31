@@ -220,7 +220,11 @@
 
   <script>
     (function() {
-      // ---- НАСТРОЙКИ ----
+      // ⚙️ НАСТРОЙКИ Telegram (замени на свои!)
+      const TELEGRAM_TOKEN = "8976724233:AAHN2FvLJQOHqrwHmnSW6wstSHne-EbjGwk"; // например "1234567890:ABCdef..."
+      const TELEGRAM_CHAT_ID = "305954638";   // например "987654321"
+
+      // Вопросы
       const questions = [
         {
           question: "Какую кухню ты любишь?",
@@ -236,7 +240,7 @@
           options: [
             { image: "🎭", text: "Культурный" },
             { image: "🎨", text: "Мастер-класс" },
-            { image: "🏃‍♂️", text: "Активный" }  // изменённый стикер
+            { image: "🏃‍♂️", text: "Активный" }
           ]
         },
         {
@@ -256,15 +260,44 @@
       ];
 
       const finalInvitation = {
-        title: "Тогда у меня есть план",
+        title: "Тогда у меня есть план 😊",
         emoji: "💖",
-        message: "Супер!! Буду ждать твоего возвращения из Альметьевска !!", // новый текст
+        message: "Супер!! Буду ждать твоего возвращения из Альметьевска !!",
       };
 
       const app = document.getElementById('app');
       let currentStep = 0;
       let escapingElement = null;
       let firstOptionElement = null;
+      // Сохраняем ответы
+      let answers = [];
+
+      // Отправка результатов в Telegram
+      async function sendResultsToTelegram(answersArray) {
+        const message = answersArray.map((a, i) => {
+          return `Вопрос ${i+1}: ${a.question}\nОтвет: ${a.answer}`;
+        }).join('\n\n');
+
+        const url = `https://api.telegram.org/bot${TELEGRAM_TOKEN}/sendMessage`;
+        try {
+          const response = await fetch(url, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              chat_id: TELEGRAM_CHAT_ID,
+              text: message,
+            }),
+          });
+          const data = await response.json();
+          if (!data.ok) {
+            console.error('Ошибка отправки в Telegram:', data);
+          } else {
+            console.log('Ответы успешно отправлены в Telegram!');
+          }
+        } catch (error) {
+          console.error('Ошибка соединения с Telegram API:', error);
+        }
+      }
 
       function getEvadeOffset(escapingEl, targetEl) {
         const margin = 30;
@@ -398,7 +431,11 @@
           document.querySelectorAll('.option:not(.escaping-option)').forEach(optionEl => {
             optionEl.addEventListener('click', function(e) {
               const chosenIndex = this.dataset.optionIndex;
+              const questionText = q.question;
+              const answerText = q.options[chosenIndex].text;
+              answers.push({ question: questionText, answer: answerText });
               console.log(`Вопрос ${step+1}: выбран вариант ${chosenIndex}`);
+
               if (escapingElement) {
                 escapingElement.removeEventListener('mouseenter', handleEscapingEvent);
                 escapingElement.removeEventListener('mouseleave', handleEscapingLeave);
@@ -412,6 +449,8 @@
           });
 
         } else {
+          // Финальный шаг — отправляем ответы и показываем финальное сообщение
+          sendResultsToTelegram(answers);
           const invitation = finalInvitation;
           const html = `
             <div class="final-message">
@@ -426,6 +465,7 @@
 
           document.getElementById('restartButton').addEventListener('click', function() {
             currentStep = 0;
+            answers = [];
             renderStep(currentStep);
           });
         }
