@@ -1,0 +1,438 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+  <title>Один важный вопрос 💌</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      background: linear-gradient(135deg, #fce4ec 0%, #f8bbd0 100%);
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: 'Segoe UI', 'Arial', sans-serif;
+      padding: 2rem;
+      margin: 0;
+      overflow-x: hidden;
+    }
+
+    .card {
+      background: rgba(255, 255, 255, 0.8);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border-radius: 3rem;
+      padding: 5rem 4rem;
+      max-width: 1500px;
+      width: 100%;
+      box-shadow: 0 40px 60px rgba(0, 0, 0, 0.1), 0 15px 25px rgba(0, 0, 0, 0.05);
+      text-align: center;
+      transition: all 0.4s ease;
+      border: 1px solid rgba(255, 255, 255, 0.6);
+      position: relative;
+      z-index: 1;
+    }
+
+    h2 {
+      font-size: 4.5rem;
+      color: #880e4f;
+      margin-bottom: 3rem;
+      font-weight: 600;
+      letter-spacing: 0.5px;
+      line-height: 1.3;
+      text-shadow: 0 2px 4px rgba(0,0,0,0.05);
+    }
+
+    .options {
+      display: flex;
+      gap: 3rem;
+      justify-content: center;
+      flex-wrap: wrap;
+      margin-top: 2rem;
+    }
+
+    .option {
+      background: white;
+      border-radius: 2.5rem;
+      padding: 3rem 2.5rem;
+      flex: 1 1 200px;
+      max-width: 280px;
+      box-shadow: 0 15px 25px rgba(0, 0, 0, 0.06);
+      cursor: pointer;
+      transition: transform 0.25s, box-shadow 0.25s, background 0.2s;
+      border: 2px solid transparent;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 1.5rem;
+      user-select: none;
+      position: relative;
+      left: 0;
+      top: 0;
+    }
+
+    .escaping-option {
+      transition: left 0.4s ease, top 0.4s ease, box-shadow 0.25s, background 0.2s;
+    }
+
+    .option:not(.escaping-option):hover {
+      transform: translateY(-8px);
+      box-shadow: 0 25px 35px rgba(233, 30, 99, 0.2);
+      border-color: #f06292;
+      background: #fff5f8;
+    }
+
+    .option:active {
+      transform: scale(0.96);
+    }
+
+    .option-image {
+      font-size: 7rem;
+      line-height: 1;
+      filter: drop-shadow(0 4px 6px rgba(0,0,0,0.1));
+      transition: transform 0.2s;
+    }
+
+    .option:not(.escaping-option):hover .option-image {
+      transform: scale(1.08);
+    }
+
+    .option-text {
+      font-size: 2.2rem;
+      font-weight: 600;
+      color: #ad1457;
+      background: #fce4ec;
+      padding: 0.6rem 2rem;
+      border-radius: 3rem;
+      letter-spacing: 0.3px;
+    }
+
+    .final-message {
+      animation: fadeInUp 0.6s ease;
+    }
+
+    .final-message h2 {
+      font-size: 4.5rem;
+      margin-bottom: 1.5rem;
+      color: #c2185b;
+    }
+
+    .final-emoji {
+      font-size: 7rem;
+      margin: 1rem 0;
+      animation: pulse 1.6s infinite;
+    }
+
+    .btn-restart {
+      background: #f06292;
+      border: none;
+      color: white;
+      padding: 1rem 2.5rem;
+      border-radius: 3rem;
+      font-size: 1.4rem;
+      font-weight: 600;
+      margin-top: 2rem;
+      cursor: pointer;
+      transition: background 0.3s, transform 0.2s;
+      box-shadow: 0 6px 14px rgba(233, 30, 99, 0.3);
+      letter-spacing: 0.4px;
+    }
+
+    .btn-restart:hover {
+      background: #e91e63;
+      transform: scale(1.03);
+    }
+
+    @keyframes fadeInUp {
+      from {
+        opacity: 0;
+        transform: translateY(25px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    @keyframes pulse {
+      0% { transform: scale(1); }
+      50% { transform: scale(1.08); }
+      100% { transform: scale(1); }
+    }
+
+    @media (max-width: 900px) {
+      .card {
+        padding: 2.5rem 2rem;
+        border-radius: 2rem;
+      }
+      h2 {
+        font-size: 2.8rem;
+      }
+      .option {
+        padding: 2rem 1.5rem;
+        max-width: 220px;
+      }
+      .option-image {
+        font-size: 5rem;
+      }
+      .option-text {
+        font-size: 1.6rem;
+      }
+      .final-message h2 {
+        font-size: 3rem;
+      }
+    }
+
+    @media (max-width: 480px) {
+      body {
+        padding: 1rem;
+      }
+      .card {
+        padding: 2rem 1rem;
+      }
+      h2 {
+        font-size: 2.2rem;
+      }
+      .option {
+        padding: 1.5rem 1rem;
+        max-width: 160px;
+        flex: 1 1 130px;
+      }
+      .option-image {
+        font-size: 4rem;
+      }
+      .option-text {
+        font-size: 1.3rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="card" id="app">
+    <!-- Контент генерируется через JavaScript -->
+  </div>
+
+  <script>
+    (function() {
+      // ---- НАСТРОЙКИ ----
+      const questions = [
+        {
+          question: "Какую кухню ты любишь?",
+          options: [
+            { image: "🥞", text: "Русская" },
+            { image: "🍝", text: "Европейская" },
+            { image: "🍣", text: "Азиатская" },
+            { image: "🍖", text: "Грузинская" }
+          ]
+        },
+        {
+          question: "Какой отдых тебе ближе?",
+          options: [
+            { image: "🎭", text: "Культурный" },
+            { image: "🎨", text: "Мастер-класс" },
+            { image: "🏃‍♂️", text: "Активный" }  // изменённый стикер
+          ]
+        },
+        {
+          question: "А как насчёт кино или прогулки? 🎬",
+          options: [
+            { image: "🎥", text: "Кино!" },
+            { image: "🚶‍♀️", text: "Гулять" }
+          ]
+        },
+        {
+          question: "Пойдешь на Свидание?",
+          options: [
+            { image: "😍", text: "Sí, claro!" },
+            { image: "🐐", text: "No, soy una cabra.", escaping: true }
+          ]
+        }
+      ];
+
+      const finalInvitation = {
+        title: "Тогда у меня есть план",
+        emoji: "💖",
+        message: "Супер!! Буду ждать твоего возвращения из Альметьевска !!", // новый текст
+      };
+
+      const app = document.getElementById('app');
+      let currentStep = 0;
+      let escapingElement = null;
+      let firstOptionElement = null;
+
+      function getEvadeOffset(escapingEl, targetEl) {
+        const margin = 30;
+        const maxOffset = 180;
+        const vw = window.innerWidth;
+        const vh = window.innerHeight;
+
+        const originalLeft = escapingEl.style.left;
+        const originalTop = escapingEl.style.top;
+        escapingEl.style.left = '0px';
+        escapingEl.style.top = '0px';
+        const baseRect = escapingEl.getBoundingClientRect();
+        escapingEl.style.left = originalLeft;
+        escapingEl.style.top = originalTop;
+
+        const targetRect = targetEl.getBoundingClientRect();
+        let attempts = 0;
+        const maxAttempts = 50;
+        let newLeft, newTop;
+        let valid = false;
+
+        do {
+          const dx = (Math.random() - 0.5) * 2 * maxOffset;
+          const dy = (Math.random() - 0.5) * 2 * maxOffset;
+          newLeft = dx;
+          newTop = dy;
+
+          const predictedRect = {
+            left: baseRect.left + dx,
+            right: baseRect.right + dx,
+            top: baseRect.top + dy,
+            bottom: baseRect.bottom + dy
+          };
+
+          if (predictedRect.left < margin || predictedRect.right > vw - margin ||
+              predictedRect.top < margin || predictedRect.bottom > vh - margin) {
+            continue;
+          }
+
+          const overlap = !(predictedRect.right < targetRect.left - margin ||
+                           predictedRect.left > targetRect.right + margin ||
+                           predictedRect.bottom < targetRect.top - margin ||
+                           predictedRect.top > targetRect.bottom + margin);
+          if (!overlap) {
+            valid = true;
+            break;
+          }
+          attempts++;
+        } while (attempts < maxAttempts);
+
+        if (!valid) {
+          return { left: 0, top: 0 };
+        }
+        return { left: newLeft, top: newTop };
+      }
+
+      function handleEscapingEvent(e) {
+        e.preventDefault();
+        e.stopPropagation();
+        if (!escapingElement || !firstOptionElement) return;
+        const offset = getEvadeOffset(escapingElement, firstOptionElement);
+        escapingElement.style.left = offset.left + 'px';
+        escapingElement.style.top = offset.top + 'px';
+      }
+
+      function handleEscapingLeave(e) {
+        if (!escapingElement) return;
+        escapingElement.style.left = '0px';
+        escapingElement.style.top = '0px';
+      }
+
+      function handleEscapingClick(e) {
+        e.preventDefault();
+        e.stopPropagation();
+        handleEscapingEvent(e);
+      }
+
+      function renderStep(step) {
+        if (escapingElement) {
+          escapingElement.removeEventListener('mouseenter', handleEscapingEvent);
+          escapingElement.removeEventListener('mouseleave', handleEscapingLeave);
+          escapingElement.removeEventListener('click', handleEscapingClick);
+          escapingElement.removeEventListener('touchstart', handleEscapingEvent);
+          escapingElement = null;
+        }
+        firstOptionElement = null;
+
+        if (step < questions.length) {
+          const q = questions[step];
+          const hasEscaping = q.options.some(opt => opt.escaping);
+
+          let html = `<h2>${q.question}</h2><div class="options">`;
+          q.options.forEach((opt, idx) => {
+            const escapingClass = opt.escaping ? 'escaping-option' : '';
+            html += `
+              <div class="option ${escapingClass}" data-option-index="${idx}">
+                ${opt.image ? `<div class="option-image">${opt.image}</div>` : ''}
+                <div class="option-text">${opt.text}</div>
+              </div>
+            `;
+          });
+          html += `</div>`;
+
+          app.innerHTML = html;
+          app.classList.remove('final-message');
+
+          if (hasEscaping) {
+            escapingElement = document.querySelector('.escaping-option');
+            firstOptionElement = document.querySelector('.option:not(.escaping-option)');
+
+            if (escapingElement && firstOptionElement) {
+              escapingElement.style.left = '0px';
+              escapingElement.style.top = '0px';
+
+              escapingElement.addEventListener('mouseenter', handleEscapingEvent);
+              escapingElement.addEventListener('mouseleave', handleEscapingLeave);
+              escapingElement.addEventListener('click', handleEscapingClick);
+              escapingElement.addEventListener('touchstart', function(e) {
+                e.preventDefault();
+                handleEscapingEvent(e);
+                setTimeout(() => {
+                  if (escapingElement) {
+                    escapingElement.style.left = '0px';
+                    escapingElement.style.top = '0px';
+                  }
+                }, 1000);
+              }, { passive: false });
+            }
+          }
+
+          document.querySelectorAll('.option:not(.escaping-option)').forEach(optionEl => {
+            optionEl.addEventListener('click', function(e) {
+              const chosenIndex = this.dataset.optionIndex;
+              console.log(`Вопрос ${step+1}: выбран вариант ${chosenIndex}`);
+              if (escapingElement) {
+                escapingElement.removeEventListener('mouseenter', handleEscapingEvent);
+                escapingElement.removeEventListener('mouseleave', handleEscapingLeave);
+                escapingElement.removeEventListener('click', handleEscapingClick);
+                escapingElement.removeEventListener('touchstart', handleEscapingEvent);
+                escapingElement = null;
+              }
+              currentStep++;
+              renderStep(currentStep);
+            });
+          });
+
+        } else {
+          const invitation = finalInvitation;
+          const html = `
+            <div class="final-message">
+              <h2>${invitation.title}</h2>
+              <div class="final-emoji">${invitation.emoji}</div>
+              <p style="font-size:2.8rem; color:#ad1457; margin:0.5rem 0; font-weight:500;">${invitation.message}</p>
+              <button class="btn-restart" id="restartButton">Пройти заново 🔄</button>
+            </div>
+          `;
+          app.innerHTML = html;
+          app.classList.add('final-message');
+
+          document.getElementById('restartButton').addEventListener('click', function() {
+            currentStep = 0;
+            renderStep(currentStep);
+          });
+        }
+      }
+
+      renderStep(currentStep);
+    })();
+  </script>
+</body>
+</html>
